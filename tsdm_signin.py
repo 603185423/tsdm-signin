@@ -18,6 +18,7 @@ import argparse
 import requests
 
 from Utils.config import ConfigManager, write_plugin_data
+from Utils.logger import log
 from Utils.notify import send_notification, beat_once
 
 config = ConfigManager().data_obj
@@ -113,6 +114,8 @@ args = parser.parse_args()
 
 isExit = False
 retry_time = 0
+
+log.info("开始运行")
 
 if args.p or config.preference.login_use_password or not config.account[0].cookies:
     loginUsePasswd()
