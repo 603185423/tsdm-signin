@@ -19,7 +19,7 @@ import requests
 
 from Utils.config import ConfigManager, write_plugin_data
 from Utils.logger import log
-from Utils.notify import send_notification, beat_once, ping_website
+from Utils.notify import send_notification, beat_once
 
 config = ConfigManager().data_obj
 
