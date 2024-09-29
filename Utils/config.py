@@ -24,7 +24,6 @@ class ServerChan(BaseModel):
     notify: bool = True
     serverchan_url: str = ""
     merge_message: bool = False
-    is_sc3: bool = False
     sc3_tags: List[str] = ["exp-tag1", "exp-tag2"]
 
 
