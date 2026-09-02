@@ -47,7 +47,7 @@ def loginUsePasswd():
     count = 0
     while True:
         sleep(1)
-        if browser.current_url.endswith('forum.php'):
+        if browser.current_url.endswith('.com/'):
             print("ss")
             break
         else:
