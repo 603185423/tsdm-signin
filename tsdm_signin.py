@@ -3,6 +3,7 @@ import sys
 
 from selenium import webdriver
 from time import sleep
+from urllib.parse import urlsplit
 from selenium import webdriver
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.keys import Keys
@@ -14,7 +15,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import NoSuchElementException
-from selenium.common.exceptions import ElementClickInterceptedException
+from selenium.common.exceptions import ElementClickInterceptedException, TimeoutException
 import time
 import json
 import argparse
@@ -88,7 +89,18 @@ def sign_in(browser: WebDriver):
     )
     # The forum layout can position the controls outside the viewport.
     for selector in selectors:
-        control = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, selector)))
+        try:
+            control = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, selector)))
+        except TimeoutException:
+            page = urlsplit(browser.current_url)
+            messages = browser.find_elements(By.ID, "messagetext")
+            notice = messages[0].text.strip() if messages else ""
+            if page.path.endswith("/member.php") and "action=login" in page.query:
+                notice = notice or "已跳转到登录页，请重新登录后再运行签到。"
+            page_url = page._replace(query="", fragment="").geturl()
+            raise TimeoutException(
+                f"未找到签到控件 {selector}。当前页面 {browser.title!r} ({page_url})。{notice}"
+            ) from None
         browser.execute_script("arguments[0].click()", control)
     sleep(3)
 
