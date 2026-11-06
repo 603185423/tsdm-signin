@@ -9,9 +9,9 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver import Chrome
 from selenium.webdriver import ChromeOptions
+from selenium.webdriver.chrome.service import Service
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import ElementClickInterceptedException
-from webdriver_manager.chrome import ChromeDriverManager
 import time
 import json
 import argparse
@@ -24,10 +24,11 @@ from Utils.notify import send_notification, beat_once
 config = ConfigManager().data_obj
 
 
-# ChromeDriverManager().install()
 option = ChromeOptions()
 option.add_experimental_option('excludeSwitches', ['enable-automation', 'enable-logging'])
-browser = Chrome(options=option)
+option.binary_location = config.preference.chrome_path
+service = Service(executable_path=config.preference.driver_path)
+browser = Chrome(service=service, options=option)
 
 
 # browser = webdriver.Chrome()

@@ -45,6 +45,8 @@ class Preference(BaseModel):
     notify: bool = True
     serverchan: ServerChan = ServerChan()
     uptime_kuma: UptimeKuma = UptimeKuma()
+    chrome_path: str = r"C:\Program Files\Google\Chrome\Application\chrome.exe"
+    driver_path: str = r"C:\Program Files\Google\Chrome\Application\chromedriver.exe"
 
 
 class Config(BaseModel):
