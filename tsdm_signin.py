@@ -10,6 +10,9 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver import Chrome
 from selenium.webdriver import ChromeOptions
 from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import ElementClickInterceptedException
 import time
@@ -77,12 +80,16 @@ def loginUseCookie():
 
 def sign_in(browser: WebDriver):
     browser.get("https://www.tsdm39.com/plugin.php?id=dsu_paulsign:sign")
-    sleep(0.5)
-    browser.execute_script('Icon_selected("kx")')
-    sleep(0.2)
-    browser.find_element("xpath", "//input[@type='radio' and @name='qdmode' and @value='3']").click()
-    sleep(0.2)
-    browser.find_element("xpath", "//img[contains(@src, 'qdtb.gif')]").click()
+    wait = WebDriverWait(browser, 10)
+    selectors = (
+        "#qiandao #kx",
+        '#qiandao input[name="qdmode"][value="3"]',
+        '#qiandao img[src*="qdtb.gif"]',
+    )
+    # The forum layout can position the controls outside the viewport.
+    for selector in selectors:
+        control = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, selector)))
+        browser.execute_script("arguments[0].click()", control)
     sleep(3)
 
 
