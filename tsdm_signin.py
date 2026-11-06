@@ -32,10 +32,7 @@ option = ChromeOptions()
 option.add_experimental_option('excludeSwitches', ['enable-automation', 'enable-logging'])
 option.binary_location = config.preference.chrome_path
 service = Service(executable_path=config.preference.driver_path)
-browser = Chrome(service=service, options=option)
 
-
-# browser = webdriver.Chrome()
 
 def save_cookie():
     if not config.preference.auto_save_cookies:
@@ -137,21 +134,24 @@ retry_time = 0
 
 log.info("开始运行")
 
-if args.p or config.preference.login_use_password or not config.account[0].cookies:
-    loginUsePasswd()
-else:
-    loginUseCookie()
+browser = Chrome(service=service, options=option)
+try:
+    if args.p or config.preference.login_use_password or not config.account[0].cookies:
+        loginUsePasswd()
+    else:
+        loginUseCookie()
 
-if args.s:
-    sign_in(browser)
-    send_notification("task finish", "Finish tsdm_signin")
-    beat_once()
-if args.a:
-    wads(browser)
-    send_notification("task finish", "Finish tsdm_wads")
-    beat_once()
+    if args.s:
+        sign_in(browser)
+        send_notification("task finish", "Finish tsdm_signin")
+        beat_once()
+    if args.a:
+        wads(browser)
+        send_notification("task finish", "Finish tsdm_wads")
+        beat_once()
 
-save_cookie()
+    save_cookie()
+finally:
+    browser.quit()
 
-browser.close()
 sys.exit(0)
